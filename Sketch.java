@@ -4,6 +4,9 @@ import processing.core.PImage;
 public class Sketch extends PApplet {
   int width = 1600;
   int height = 800;
+
+  //int width = 1920;
+  //int height = 1020;
   
   //int width = 1280;
   //int height = 720;
@@ -34,6 +37,7 @@ public class Sketch extends PApplet {
   PImage background_room;
   PImage heart;
   PImage lamb;
+  PImage YOU_DIED;
 
   int lambX = width/2;
   int lambY = 200;
@@ -65,13 +69,18 @@ public class Sketch extends PApplet {
   boolean intangibility = false;
   int intangibilityTimer = 0;
   boolean wasHit = false;
-  float life = 12; 
+  float life = 10; 
 
   int bossHealth = 700;
+  int lambHitWall = 0;
 
   int objectLimiter = 255;
   
   int internalFrameCount = 0;
+  int gameState = 1;
+
+  int fadeWhite = 255;
+
   public void settings() {
     size(width, height);
   }
@@ -81,7 +90,7 @@ public class Sketch extends PApplet {
 //    background_room = loadImage("19-F08-07b-19.jpg");  
     heart = loadImage("PlayerHeart2.png");
     lamb = loadImage("273.10.00.png");
-
+    YOU_DIED = loadImage("YOU DIED BLACK.png");
     for(int i = 0; i < 200; i += 1){
       tearExist[i] = false;
     }
@@ -91,158 +100,204 @@ public class Sketch extends PApplet {
     //background(background_room);
     background(255, 255, 255);
 
-    if (intangibility == true){
-      img = loadImage("010.01.00 2.png");
-    } else if (intangibility == false){
-      img = loadImage("010.01.00.png");
-    }
-
-    for(int displayHearts = 0; displayHearts < life; displayHearts ++){
-      image(heart, (displayHearts*25) + 25, 45);
-    }
-    
-    if(i > 197){
-      i = 0;
-      for (int b = 0; b < 197; b ++){
-        //xArray[b] = 0;
-        //yArray[b] = 0;
-        //xSpeedArray[b] = 0;
-        //ySpeedArray[b] = 0;
+    // PLAYING GAMESTATE
+    if(gameState == 1){
+      if (intangibility == true){
+        img = loadImage("010.01.00 2.png");
+      } else if (intangibility == false){
+        img = loadImage("010.01.00.png");
       }
-    }
-    if(enemy_i > objectLimiter){
-      enemy_i = 0;
-      /*for (int b = 0; b < 290; b ++){
-        xEnemyArray[b] = 0;
-        yEnemyArray[b] = 0;
-        xEnemySpeedArray[b] = 0;
-        yEnemySpeedArray[b] = 0;
-      }*/
-    }
-    if (tearDelay == 0){
-      if(makeTear == true){
-        i ++;
 
-        tearExist[i] = true;
-
-        xArray[i] = x;
-        yArray[i] = y;
-
-        xSpeedArray[i + 1] = 0;
-        ySpeedArray[i + 1] = 0;
-        tearDelay = 20;
+      for(int displayHearts = 0; displayHearts < life; displayHearts ++){
+        image(heart, (displayHearts*25) + 25, 45);
       }
-    }
-    if (tearDelay > 0){
-      tearDelay -= 1;
-    }
- 
-    for (int f = 0; f <= 197; f ++){
+      if (life == 0){
+        gameState = 2;
+      }
+
+      for(int displayBossBar = bossHealth; displayBossBar < 0; displayBossBar -= 1){
+        noStroke();
+        fill(255, 0, 0);
+        rect(200, height - 200, (width - 200) - displayBossBar, height - 250);
+      }
+      
+      if(i > 197){
+        i = 0;
+        for (int b = 0; b < 197; b ++){
+          //xArray[b] = 0;
+          //yArray[b] = 0;
+          //xSpeedArray[b] = 0;
+          //ySpeedArray[b] = 0;
+        }
+      }
+      if(enemy_i > objectLimiter){
+        enemy_i = 0;
+        /*for (int b = 0; b < 290; b ++){
+          xEnemyArray[b] = 0;
+          yEnemyArray[b] = 0;
+          xEnemySpeedArray[b] = 0;
+          yEnemySpeedArray[b] = 0;
+        }*/
+      }
+      if (tearDelay == 0){
+        if(makeTear == true){
+          i ++;
+
+          tearExist[i] = true;
+
+          xArray[i] = x;
+          yArray[i] = y;
+
+          xSpeedArray[i + 1] = 0;
+          ySpeedArray[i + 1] = 0;
+          tearDelay = 20;
+        }
+      }
       if (tearDelay > 0){
-        if (tearUpPressed) {
-          ySpeedArray[i] = -10;
-        }
-        if (tearDownPressed) {
-          ySpeedArray[i] = 10;
-        }
-        if (tearLeftPressed) {
-          xSpeedArray[i] = -10;
-        }
-        if (tearRightPressed) {
-          xSpeedArray[i] = 10;
-        }
+        tearDelay -= 1;
       }
-
-      xArray[f] = xArray[f] + xSpeedArray[f];
-      yArray[f] = yArray[f] + ySpeedArray[f];
-
-      if (tearExist[f] == true){
-        fill(190,190,255);
-        ellipse(xArray[f], yArray[f], 15, 15);
-
-        if ((xArray[f] < (lambX + 50)) && (xArray[f] > lambX - 50) && (yArray[f] > lambY - 50) && (yArray[f] < (lambY + 50))){
-          bossHealth -= 3;
-          println(bossHealth);
-          tearExist[f] = false;
+  
+      for (int f = 0; f <= 197; f ++){
+        if (tearDelay > 0){
+          if (tearUpPressed) {
+            ySpeedArray[i] = -10;
+          }
+          if (tearDownPressed) {
+            ySpeedArray[i] = 10;
+          }
+          if (tearLeftPressed) {
+            xSpeedArray[i] = -10;
+          }
+          if (tearRightPressed) {
+            xSpeedArray[i] = 10;
+          }
         }
-      }
-    }
-    
-    for (int f = 0; f <= objectLimiter; f ++){
-      xEnemyArray[f] = xEnemyArray[f] + xEnemySpeedArray[f];
-      yEnemyArray[f] = yEnemyArray[f] + yEnemySpeedArray[f];
 
-      fill(255,190,190);
-      ellipse((float)xEnemyArray[f], (float)yEnemyArray[f], 25, 25);
-    }
+        xArray[f] = xArray[f] + xSpeedArray[f];
+        yArray[f] = yArray[f] + ySpeedArray[f];
 
-    //movement engine
-    playerMovementEngine();  
-    intangibilityEngine();
+        if (tearExist[f] == true){
+          fill(190,190,255);
+          ellipse(xArray[f], yArray[f], 15, 15);
 
-    
-
-    //println(playerAngle((lambX), (lambY), x - 30, y - 25));
-    //println(angle_i);
-    //println(tearUpPressed + " " + tearDownPressed + " " + tearLeftPressed + " " + tearRightPressed);
-    //println(frameCount + " " + angle_i);
-    //enemyTear(lambX, lambY, (int) playerAngle((lambX), (lambY), x, y), -5);
-    if(bossHealth < 699){
-      internalFrameCount += 1;
-     
-      if(internalFrameCount >= 30 && internalFrameCount < 35){
-        triAttack();
-      }
-      if(internalFrameCount >= 90 && internalFrameCount < 95){
-        triAttack();
-      }
-      if(internalFrameCount >= 150 && internalFrameCount < 155){
-        triAttack();
+          if ((xArray[f] < (lambX + 50)) && (xArray[f] > lambX - 50) && (yArray[f] > lambY - 50) && (yArray[f] < (lambY + 50))){
+            bossHealth -= 3;
+            println(bossHealth);
+            tearExist[f] = false;
+          }
+        }
       }
       
-      if(internalFrameCount == 350){
-        sniperAttack(playerAngle(lambX, lambY, x, y));
-      }
-      if(internalFrameCount == 400){
-        sniperAttack(playerAngle(lambX, lambY, x, y));
-      }
-      if(internalFrameCount == 450){
-        sniperAttack(playerAngle(lambX, lambY, x, y));
+      for (int f = 0; f <= objectLimiter; f ++){
+        xEnemyArray[f] = xEnemyArray[f] + xEnemySpeedArray[f];
+        yEnemyArray[f] = yEnemyArray[f] + yEnemySpeedArray[f];
+
+        fill(255,190,190);
+        ellipse((float)xEnemyArray[f], (float)yEnemyArray[f], 25, 25);
       }
 
-      if(internalFrameCount >= 600 && internalFrameCount <= 800){
-        if(internalFrameCount == 601){
-          lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-          lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+      //movement engine
+      playerMovementEngine();  
+      intangibilityEngine();
+
+      
+
+      //println(playerAngle((lambX), (lambY), x - 30, y - 25));
+      //println(angle_i);
+      //println(tearUpPressed + " " + tearDownPressed + " " + tearLeftPressed + " " + tearRightPressed);
+      //println(internalFrameCount);
+      //enemyTear(lambX, lambY, (int) playerAngle((lambX), (lambY), x, y), -5);
+      //println(lambHitWall);
+      if(bossHealth < 699){
+        if (internalFrameCount == -1){
+          lambHitWall = 0;
         }
-          
-        if (lambX <= -20 || lambX >= width + 20 || lambY <= -20 || lambY >= height + 20){
+        
+        internalFrameCount += 1;
+      
+        if(internalFrameCount >= 30 && internalFrameCount < 35){
+          triAttack();
+        }
+        if(internalFrameCount >= 90 && internalFrameCount < 95){
+          triAttack();
+        }
+        if(internalFrameCount >= 150 && internalFrameCount < 155){
+          triAttack();
+        }
+        
+        if(internalFrameCount == 350){
           sniperAttack(playerAngle(lambX, lambY, x, y));
-          sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
-          sniperAttack(10 - (playerAngle(lambX, lambY, x, y)));
-          sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
-          
-          //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
+        }
+        if(internalFrameCount == 400){
+          sniperAttack(playerAngle(lambX, lambY, x, y));
+        }
+        if(internalFrameCount == 450){
+          sniperAttack(playerAngle(lambX, lambY, x, y));
+        }
 
-          lambX = (width) - lambX;
-          lambY = (height) - lambY;
-          lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-          lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-        } 
-      }
-      if (internalFrameCount > 800){
-        lambSpeedX = lambSpeedX * 0.9;
-        lambSpeedY = lambSpeedY * 0.9;
-      }
+        if(internalFrameCount >= 600){
+          if(internalFrameCount == 601){
+            lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          }
+            
+          if (lambX <= -20 || lambX >= width + 20 && lambHitWall < 3){
+            lambHitWall += 1;
+            sniperAttack(playerAngle(lambX, lambY, x, y));
+            sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
+            sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
+            sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
+            
+            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
 
-      if(internalFrameCount == 1000){
-        internalFrameCount = 0;
-      }     
-      
-      /*if(internalFrameCount >= 180){
-        objectLimiter = 750;
-        //heartAttack();
-      }*/
+            //lambX = (width) - lambX;
+            //lambY = (height) - lambY;
+            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedX = lambSpeedX * -1;
+          } else if(lambY <= -20 || lambY >= height + 20 && lambHitWall < 3){
+            lambHitWall += 1;
+            sniperAttack(playerAngle(lambX, lambY, x, y));
+            sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
+            sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
+            sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
+            
+            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
+
+            //lambX = (width) - lambX;
+            //lambY = (height) - lambY;
+            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedY = lambSpeedY * -1;
+          }
+        }
+        if (lambHitWall >= 3){
+          lambSpeedX = lambSpeedX * 0.9;
+          lambSpeedY = lambSpeedY * 0.9;
+        }
+        if (lambHitWall >= 3 && internalFrameCount >= 0){
+          internalFrameCount = -60;
+        }
+
+
+        
+        /*if(internalFrameCount >= 180){
+          objectLimiter = 750;
+          //heartAttack();
+        }*/
+      }
+    }
+
+
+    // DEATH GAMESTATE
+    if (gameState == 2){
+      background(fadeWhite);
+      if (fadeWhite > 0){
+        fadeWhite -= 1;
+      }
+      if (fadeWhite == 0){
+        image(YOU_DIED, (width/2) - (384/2), (height/2) - (56/2));
+      }
     }
   }
 
