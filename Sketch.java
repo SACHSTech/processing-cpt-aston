@@ -91,6 +91,8 @@ public class Sketch extends PApplet {
   int internalAttackDelay = 100;
   int gameState = 1;
 
+  float bossPhase = 1;
+
   int fadeWhite = 255;
 
   public void settings() {
@@ -123,6 +125,10 @@ public class Sketch extends PApplet {
   public void draw() {
     //background(background_room);
     background(255, 255, 255);
+
+    if(gameState == 0){
+
+    }
 
     // PLAYING GAMESTATE
     if(gameState == 1 || gameState == 3){
@@ -239,123 +245,131 @@ public class Sketch extends PApplet {
       //println(lambHitWall);
 
       internalAttackDelay = (int)(bossHealth/10 + 50);
-
-      if(bossHealth < maxHealth && bossHealth >= maxHealth/2){
-        if (internalFrameCount == -1){
-          lambHitWall = 0;
-        }
-        
+      if (bossHealth < maxHealth){
         internalFrameCount += 1;
-      
-        if(internalFrameCount >= 30 && internalFrameCount < 35){
-          triAttack();
-        }
-        if(internalFrameCount >= 30 + (60 * internalAttackDelay/100) && internalFrameCount < 35 + (60 * internalAttackDelay/100)){
-          triAttack();
-        }
-        if(internalFrameCount >= 30 + 2*(60 * internalAttackDelay/100) && internalFrameCount < 35 + 2*(60 * internalAttackDelay/100)){
-          triAttack();
-        }
-        
-        //if(internalFrameCount == 350){
-        if(internalFrameCount == 155 + internalAttackDelay){
-          sniperAttack(playerAngle(lambX, lambY, x, y));
-        }
-        //if(internalFrameCount == 400){
-        if(internalFrameCount == 205 + internalAttackDelay){
-          sniperAttack(playerAngle(lambX, lambY, x, y));
-        }
-        //if(internalFrameCount == 450){
-        if(internalFrameCount == 255 + internalAttackDelay){
-          sniperAttack(playerAngle(lambX, lambY, x, y));
-        }
-
-        if(internalFrameCount >= 400 + (internalAttackDelay)){
-          if(internalFrameCount == 400 + (internalAttackDelay)){
-            lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+        if(bossHealth >= maxHealth/2 && bossPhase == 1){
+          if (internalFrameCount == -1){
+            lambHitWall = 0;
           }
-            
-          //if (lambX <= 50 || lambX >= width - 50 && lambHitWall < 3){
-          if (lambX <= 50 || lambX >= width - 50){
-
-            lambHitWall += 1;
-            sniperAttack(playerAngle(lambX, lambY, x, y));
-            sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
-            sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
-            sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
-            
-            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
-
-            //lambX = (width) - lambX;
-            //lambY = (height) - lambY;
-            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            lambSpeedX = lambSpeedX * -1;
-          } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
-          else if(lambY <= 50 || lambY >= height -50){
-            lambHitWall += 1;
-            sniperAttack(playerAngle(lambX, lambY, x, y));
-            sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
-            sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
-            sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
-            
-            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
-
-            //lambX = (width) - lambX;
-            //lambY = (height) - lambY;
-            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            lambSpeedY = lambSpeedY * -1;
-          }
-        } else{
-          if (lambX <= 50 || lambX >= width - 50){
-            lambSpeedX = lambSpeedX * -1;
-          } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
-          else if(lambY <= 50 || lambY >= height -50){
-            lambSpeedY = lambSpeedY * -1;
-          }
-        }
-        if (lambHitWall >= 3 && internalFrameCount <= 255){
-          lambSpeedX = lambSpeedX * 0.90;
-          lambSpeedY = lambSpeedY * 0.90;
           
-          if (Math.round(lambSpeedX) == 0) {
+          internalFrameCount += 1;
+        
+          if(internalFrameCount >= 30 && internalFrameCount < 35){
+            triAttack();
+          }
+          if(internalFrameCount >= 30 + (60 * internalAttackDelay/100) && internalFrameCount < 35 + (60 * internalAttackDelay/100)){
+            triAttack();
+          }
+          if(internalFrameCount >= 30 + 2*(60 * internalAttackDelay/100) && internalFrameCount < 35 + 2*(60 * internalAttackDelay/100)){
+            triAttack();
+          }
+          
+          //if(internalFrameCount == 350){
+          if(internalFrameCount == 155 + internalAttackDelay){
+            sniperAttack(playerAngle(lambX, lambY, x, y));
+          }
+          //if(internalFrameCount == 400){
+          if(internalFrameCount == 205 + internalAttackDelay){
+            sniperAttack(playerAngle(lambX, lambY, x, y));
+          }
+          //if(internalFrameCount == 450){
+          if(internalFrameCount == 255 + internalAttackDelay){
+            sniperAttack(playerAngle(lambX, lambY, x, y));
+          }
+
+          if(internalFrameCount >= 400 + (internalAttackDelay)){
+            if(internalFrameCount == 400 + (internalAttackDelay)){
+              lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+              lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            }
+              
+            //if (lambX <= 50 || lambX >= width - 50 && lambHitWall < 3){
+            if (lambX <= 50 || lambX >= width - 50){
+
+              lambHitWall += 1;
+              sniperAttack(playerAngle(lambX, lambY, x, y));
+              sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
+              sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
+              sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
+              
+              //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
+
+              //lambX = (width) - lambX;
+              //lambY = (height) - lambY;
+              //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+              //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+              lambSpeedX = lambSpeedX * -1;
+            } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
+            else if(lambY <= 50 || lambY >= height -50){
+              lambHitWall += 1;
+              sniperAttack(playerAngle(lambX, lambY, x, y));
+              sniperAttack(10 + (playerAngle(lambX, lambY, x, y)));
+              sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
+              sniperAttack(-1*(playerAngle(lambX, lambY, x, y)));
+              
+              //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
+
+              //lambX = (width) - lambX;
+              //lambY = (height) - lambY;
+              //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+              //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+              lambSpeedY = lambSpeedY * -1;
+            }
+          } else{
+            if (lambX <= 50 || lambX >= width - 50){
+              lambSpeedX = lambSpeedX * -1;
+            } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
+            else if(lambY <= 50 || lambY >= height -50){
+              lambSpeedY = lambSpeedY * -1;
+            }
+          }
+          if (lambHitWall >= 3 && internalFrameCount <= 255){
+            lambSpeedX = lambSpeedX * 0.90;
+            lambSpeedY = lambSpeedY * 0.90;
+            
+            if (Math.round(lambSpeedX) == 0) {
+              lambSpeedX = 0;
+            }
+            if (Math.round(lambSpeedY) == 0) {
+              lambSpeedY = 0;
+            }
+
+          }
+          if (lambHitWall >= 3 && internalFrameCount >= 0){
+            internalFrameCount = -60;
+
+            lambX = width/2;
+            lambY = 50;
             lambSpeedX = 0;
+            lambSpeedY = 20;
           }
-          if (Math.round(lambSpeedY) == 0) {
-            lambSpeedY = 0;
-          }
-
         }
-        if (lambHitWall >= 3 && internalFrameCount >= 0){
-          internalFrameCount = -60;
-
-          lambX = width/2;
-          lambY = 50;
+        else if(bossHealth < maxHealth/2 && bossPhase == 1){
           lambSpeedX = 0;
-          lambSpeedY = 20;
+          lambSpeedY = 0;
+
+          lambX = 800;
+          lambY = 500;
+
+          internalFrameCount = 0;
+
+          bossPhase = 2;
         }
-      }
-      else if(bossHealth < maxHealth/2){
-        lambSpeedX = 0;
-        lambSpeedY = 0;
-
-        lambX = 800;
-        lambY = 500;
-
-        if(internalFrameCount >= 180){
-          if(enemyMakeTear == true){
-            objectLimiter = 750;
-            heartAttack();
+        if (bossPhase == 2){
+          if(internalFrameCount >= 180){
+            if(enemyMakeTear == true){
+              objectLimiter = 750;
+              heartAttack();
+            }
           }
         }
       }
     }
-
-
     // DEATH GAMESTATE
     if (gameState == 2){
+
+      internalFrameCount = 0;
+      
       background(fadeWhite);
       if (fadeWhite > 0){
         fadeWhite -= 1;
@@ -590,5 +604,5 @@ public class Sketch extends PApplet {
       enemyTear(lambX, lambY, angle_i[3], i);
     }
   }
-  
+
 }
