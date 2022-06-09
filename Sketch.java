@@ -1,6 +1,12 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+
+/**
+ * 
+ * 
+ */
+
 public class Sketch extends PApplet {
   int width = 1600;
   int height = 800;
@@ -37,6 +43,8 @@ public class Sketch extends PApplet {
   PImage background_room;
   PImage heart;
   PImage lamb;
+  PImage fly;
+  PImage background;
 
   PImage the_lamb_spritesheet;
   PImage the_lamb_standing_sheet;
@@ -65,16 +73,16 @@ public class Sketch extends PApplet {
   boolean[] tearExist = new boolean[200];
   boolean[] enemyTearExist = new boolean[1000];
 
-  double[][] xEnemyArray = new double[1000][2];
-  double[][] yEnemyArray = new double[1000][2];
+  double[][] xEnemyArray = new double[1000][3];
+  double[][] yEnemyArray = new double[1000][3];
   
-  double[][] xEnemySpeedArray = new double[1000][2];
-  double[][] yEnemySpeedArray = new double[1000][2];
+  double[][] xEnemySpeedArray = new double[1000][3];
+  double[][] yEnemySpeedArray = new double[1000][3];
 
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 1;
+  int tearDamage = 2;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
@@ -84,9 +92,11 @@ public class Sketch extends PApplet {
   int maxHealth = 1000;
   int bossHealth = maxHealth;
 
+  int[] enemyHealth = new int[1000];
+
   int lambHitWall = 0;
 
-  int objectLimiter = 255;
+  int[] objectLimiter = new int[3];
   
   int internalFrameCount = 0;
   int internalAttackDelay = 100;
@@ -100,16 +110,23 @@ public class Sketch extends PApplet {
     size(width, height);
   }
   public void setup() {
-    background(255, 255, 255);
+    //background(255, 255, 255);
+
     img = loadImage("010.01.00.png");
-//    background_room = loadImage("19-F08-07b-19.jpg");  
+    background_room = loadImage("touhou background.jpg");  
     heart = loadImage("PlayerHeart2.png");
     lamb = loadImage("273.10.00.png");
     YOU_DIED = loadImage("YOU DIED BLACK.png");
+    //fly = loadImage("013.00.00.png");
+    fly = loadImage("256.00.00.png");
+
+
     for(int i = 0; i < 200; i += 1){
       tearExist[i] = false;
       enemyTearExist[i] = false;
     }
+    objectLimiter[0] = 255;
+    objectLimiter[2] = 3;
 
     the_lamb_spritesheet = loadImage("the lamb.png");
     the_lamb_standing_sheet = the_lamb_spritesheet.get(0,0,the_lamb_frameWidth*intlamb_frames, 80);
@@ -120,11 +137,14 @@ public class Sketch extends PApplet {
       System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
+    for(int i = 0; i <= 5; i += 1){
+      enemyHealth[i] = 10;
+    }
   }
 
   public void draw() {
-    //background(background_room);
-    background(255, 255, 255);
+    background(background_room);
+    //background(255, 255, 255);
     
     //Title Screen
     if(gameState == 0){
@@ -133,11 +153,6 @@ public class Sketch extends PApplet {
 
     // PLAYING GAMESTATE
     if(gameState == 1 || gameState == 3){
-      if (intangibility == true){
-        img = loadImage("010.01.00 2.png");
-      } else if (intangibility == false){
-        img = loadImage("010.01.00.png");
-      }
 
       for(int displayHearts = 0; displayHearts < life; displayHearts ++){
         image(heart, (displayHearts*25) + 25, 45);
@@ -163,7 +178,7 @@ public class Sketch extends PApplet {
           //ySpeedArray[b] = 0;
         }
       }
-      if(enemy_i[0] > objectLimiter){
+      if(enemy_i[0] > objectLimiter[0]){
         enemy_i[0] = 0;
         /*for (int b = 0; b < 290; b ++){
           xEnemyArray[b] = 0;
@@ -216,15 +231,21 @@ public class Sketch extends PApplet {
 
           if ((xArray[f] < (lambX + 50)) && (xArray[f] > lambX - 50) && (yArray[f] > lambY - 50) && (yArray[f] < (lambY + 50))){
             bossHealth -= tearDamage;
-            println(bossHealth);
+            //println(bossHealth);
             tearExist[f] = false;
           }
           if (xArray[f] < -50 || xArray[f] > width + 50|| yArray[f] < -50 || yArray[f] > height + 50){
             tearExist[f] = false;
           }
+          for(int n = 0; n < 3; n += 1){
+            if ((xArray[f] < (xEnemyArray[n][2] + 20)) && (xArray[f] > xEnemyArray[n][2] - 20) && (yArray[f] > yEnemyArray[n][2] - 20) && (yArray[f] < (yEnemyArray[n][2] + 20))){
+              enemyHealth[f] -= tearDamage;
+              tearExist[f] = false;
+            }
+          }
         }
       }
-      for (int f = 0; f <= objectLimiter; f ++){
+      for (int f = 0; f <= objectLimiter[0]; f ++){
         if(enemyTearExist[f] == true){
           xEnemyArray[f][0] = xEnemyArray[f][0] + xEnemySpeedArray[f][0];
           yEnemyArray[f][0] = yEnemyArray[f][0] + yEnemySpeedArray[f][0];
@@ -244,10 +265,12 @@ public class Sketch extends PApplet {
           }
         }
       }
+      
 
       //movement engine
       playerMovementEngine();  
       intangibilityEngine();
+
 
 
 
@@ -280,15 +303,15 @@ public class Sketch extends PApplet {
                     
           if(internalFrameCount == 350){
           //if(internalFrameCount == 155 + internalAttackDelay){
-            sniperAttack(playerAngle(lambX, lambY, x, y), 15);
+            sniperAttack(playerAngle(lambX, lambY, x, y), 20);
           }
           if(internalFrameCount == 400){
           //if(internalFrameCount == 205 + internalAttackDelay){
-            sniperAttack(playerAngle(lambX, lambY, x, y), 17);
+            sniperAttack(playerAngle(lambX, lambY, x, y), 20);
           }
           if(internalFrameCount == 450){
           //if(internalFrameCount == 255 + internalAttackDelay){
-            sniperAttack(playerAngle(lambX, lambY, x, y), 19);
+            sniperAttack(playerAngle(lambX, lambY, x, y), 20);
           }
 
           if(internalFrameCount >= 550){
@@ -321,7 +344,7 @@ public class Sketch extends PApplet {
               sniperAttack(playerAngle(lambX, lambY, x, y), 19);
               //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
               //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
-              sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
+              //sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
               //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
 
               //lambX = (width) - lambX;
@@ -353,34 +376,34 @@ public class Sketch extends PApplet {
           if (lambHitWall >= 3 && internalFrameCount >= 0){
             internalFrameCount = -60;
 
-            lambX = width/2;
-            lambY = 50;
-            lambSpeedX = 0;
-            lambSpeedY = 20;
+            //lambX = width/2;
+            //lambY = 50;
+            //lambSpeedX = 0;
+            //lambSpeedY = 20;
           }
         }
         else if(bossHealth < maxHealth/2 && bossPhase == 1){
           lambSpeedX = 0;
           lambSpeedY = 0;
 
-          lambX = 800;
-          lambY = 500;
+          //lambX = 800;
+          //lambY = 500;
 
           internalFrameCount = 0;
 
+          spawnFlies(4);
           bossPhase = 2;
+
         }
         if (bossPhase == 2){
           if(internalFrameCount == 50){
-            enemy_i[1] = 2;
-            spawnFlies();
-
           }
           
           /*if(internalFrameCount >= 100 && internalFrameCount <= 125 && internalFrameCount % 5 == 0){
             gridAttack(0, 0);
           }*/
           if(internalFrameCount >= 150 && internalFrameCount < 190 && internalFrameCount % 5 == 0){
+            
             lambSpeedX = (int) (-2*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
             lambSpeedY = (int) (-2*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
             
@@ -412,12 +435,90 @@ public class Sketch extends PApplet {
               lambSpeedY = 0;
             }
           }
-
-          if(internalFrameCount >= 365 && internalFrameCount < 370){
-
+          if(internalFrameCount == 499){
+            enemy_i[0] = 0;
+          }
+          
+          if(internalFrameCount >= 500 && internalFrameCount < 550 && internalFrameCount % 10 == 0){
+            enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
           }
 
-          if(internalFrameCount > 450){
+          if(internalFrameCount == 571){
+            try{
+              for(int l = 0; l < 20; l += 1){
+                xEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+                yEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+              }
+            }            
+            catch(IndexOutOfBoundsException error){
+
+            }
+            //enemy_i[0] = 0;
+          }
+
+          if(internalFrameCount >= 572 && internalFrameCount < 622 && internalFrameCount % 10 == 0){
+            enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
+          }
+
+          if(internalFrameCount == 623){
+            try{
+              for(int l = 0; l < 20; l += 1){
+                xEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+                yEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+              }
+            }            
+            catch(IndexOutOfBoundsException error){
+
+            }
+            //enemy_i[0] = 0;
+          }
+          if(internalFrameCount >= 624 && internalFrameCount < 674 && internalFrameCount % 10 == 0){
+            enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
+            enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
+          }
+
+          if(internalFrameCount == 675){
+            try{
+              for(int l = 0; l < 20; l += 1){
+                xEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+                yEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+              }
+            }            
+            catch(IndexOutOfBoundsException error){
+
+            }
+            enemy_i[0] = 0;
+          }
+          /*
+          if(internalFrameCount == 650){
+            for(int dfds = 0; dfds <= 360; dfds += 45){
+              gridAttack(500, 500, dfds, 20); 
+            }
+          }*/
+          if(internalFrameCount == 725){
+            for(int i = -20; i < 20; i += 5){
+              for(int f = -20; f < 20; f += 5){
+                enemyTear(lambX + i, lambY + f, (int)playerAngle(lambX, lambY, x, y), -4);
+              }
+            }
+          }
+
+          if(internalFrameCount == 850){
+            for(int l = 0; l < 60; l += 1){
+              xEnemySpeedArray[enemy_i[0] - l][0] = (-10*(Math.cos(Math.toRadians(l*18))));
+              yEnemySpeedArray[enemy_i[0] - l][0] = (-10*(Math.sin(Math.toRadians(l*18))));     
+            }
+          }
+
+          if(internalFrameCount > 1000){
             internalFrameCount = 0;
           }
 
@@ -582,11 +683,41 @@ public class Sketch extends PApplet {
     lambX = (int) (lambX + lambSpeedX);
     lambY = (int) (lambY + lambSpeedY);
     
+    for(int b = 0; b <= 3; b += 1){
+      xEnemySpeedArray[b][2] = (-1*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[b][2], (int)yEnemyArray[b][2], x, y)))));
+      yEnemySpeedArray[b][2] = (-1*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[b][2], (int)yEnemyArray[b][2], x, y)))));
 
-    //rect(lambX - 75, lambY - 75, 150, 150);    
-    image(img, x - 30, y - 25);
+      xEnemyArray[b][2] = xEnemyArray[b][2] + xEnemySpeedArray[b][2];
+      yEnemyArray[b][2] = yEnemyArray[b][2] + yEnemySpeedArray[b][2];
+
+    }
+
+    //rect(lambX - 75, lambY - 75, 150, 150);  
+    if (intangibility == true){
+      tint(255,0,0);
+      image(img, x - 30, y - 25);
+    } else if (intangibility == false){
+      noTint();
+      image(img, x - 30, y - 25);
+    }
+
     //image(lamb, lambX - 75, lambY - 75, 150, 150);
-    image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
+    //noTint();
+    if(wasHit == true){
+      tint(255,0,0);
+      image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
+    } else if (wasHit == false){
+      noTint();
+      image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
+
+    }
+    
+    for (int f = 0; f < 5; f ++){
+      if(enemyHealth[f] == 10){
+        println(enemyHealth[f]);
+        image(fly, (float) xEnemyArray[f][2] - 36, (float)yEnemyArray[f][2] - 18);
+      }
+    }
 
   }
   public void intangibilityEngine(){
@@ -594,7 +725,7 @@ public class Sketch extends PApplet {
       if ((x < (lambX + 50)) && (x > lambX - 50) && (y > lambY - 50) && (y < (lambY + 50))){
         wasHit = true;
       }
-      for(int enemy_hitboxCheck = 0; enemy_hitboxCheck < objectLimiter; enemy_hitboxCheck += 1){
+      for(int enemy_hitboxCheck = 0; enemy_hitboxCheck < objectLimiter[0]; enemy_hitboxCheck += 1){
         if((x < (xEnemyArray[enemy_hitboxCheck][0] + 20)) && (x > (xEnemyArray[enemy_hitboxCheck][0] - 20)) && (y > (yEnemyArray[enemy_hitboxCheck][0] - 20)) && (y < (yEnemyArray[enemy_hitboxCheck][0] + 20))){
           wasHit = true;
         }
@@ -669,16 +800,12 @@ public class Sketch extends PApplet {
       enemyTear(lambX, lambY, angle_i[3], i);
     }
   }
-  public void gridAttack(int originX, int originY){
-    objectLimiter = 995;
-    //try{
-      for(int i = originY; i < 7; i += 1){
-        enemyTear(0, i*150, 0, 50);
-      }
-      
-   /*} catch(IndexOutOfBoundsException error){
+  public void gridAttack(int originX, int originY, int playerAngle, int magnitude){
+    angle_i[4] = (int)playerAngle;
 
-    }*/
+    for(int i = -5; i > -1*magnitude; i -= 1){
+      enemyTear(originX, originY, angle_i[4], i);
+    }
   }
   public void indicatorAttack(double playerAngle){
     stroke(0);
@@ -690,7 +817,16 @@ public class Sketch extends PApplet {
       enemyTear(lambX, lambY, (int) angle + triAngle, magnitude);
     }
   }
-  public void spawnFlies(){
+  public void spawnFlies(int fliesSpawned){
+    for(int i = 0; i < fliesSpawned; i ++){
+      objectLimiter[1] = fliesSpawned;
+      enemy_i[1] = fliesSpawned;
 
+      xEnemyArray[i][2] = (lambX - 200) + i*100;
+
+      yEnemyArray[i][2] = lambY;
+
+      //enemyHealth[i] = 10;
+    }
   }
 }
