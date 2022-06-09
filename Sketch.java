@@ -82,7 +82,7 @@ public class Sketch extends PApplet {
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 2;
+  int tearDamage = 100;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
@@ -137,9 +137,7 @@ public class Sketch extends PApplet {
       System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
-    for(int i = 0; i <= 5; i += 1){
-      enemyHealth[i] = 10;
-    }
+    
   }
 
   public void draw() {
@@ -155,7 +153,7 @@ public class Sketch extends PApplet {
     if(gameState == 1 || gameState == 3){
 
       for(int displayHearts = 0; displayHearts < life; displayHearts ++){
-        image(heart, (displayHearts*25) + 25, 45);
+        image(heart, (displayHearts*25) + 100, 45);
       }
       if (life == 0){
         gameState = 2;
@@ -171,21 +169,12 @@ public class Sketch extends PApplet {
       
       if(i > 197){
         i = 0;
-        for (int b = 0; b < 197; b ++){
-          //xArray[b] = 0;
-          //yArray[b] = 0;
-          //xSpeedArray[b] = 0;
-          //ySpeedArray[b] = 0;
-        }
+        tearExist[i] = false;
+
+
       }
       if(enemy_i[0] > objectLimiter[0]){
         enemy_i[0] = 0;
-        /*for (int b = 0; b < 290; b ++){
-          xEnemyArray[b] = 0;
-          yEnemyArray[b] = 0;
-          xEnemySpeedArray[b] = 0;
-          yEnemySpeedArray[b] = 0;
-        }*/
       }
       if (tearDelay == 0){
         if(makeTear == true){
@@ -231,7 +220,7 @@ public class Sketch extends PApplet {
 
           if ((xArray[f] < (lambX + 50)) && (xArray[f] > lambX - 50) && (yArray[f] > lambY - 50) && (yArray[f] < (lambY + 50))){
             bossHealth -= tearDamage;
-            //println(bossHealth);
+            println(bossHealth);
             tearExist[f] = false;
           }
           if (xArray[f] < -50 || xArray[f] > width + 50|| yArray[f] < -50 || yArray[f] > height + 50){
@@ -512,26 +501,35 @@ public class Sketch extends PApplet {
           }
 
           if(internalFrameCount == 850){
-            for(int l = 0; l < 60; l += 1){
-              xEnemySpeedArray[enemy_i[0] - l][0] = (-10*(Math.cos(Math.toRadians(l*18))));
-              yEnemySpeedArray[enemy_i[0] - l][0] = (-10*(Math.sin(Math.toRadians(l*18))));     
+            for(int l = 0; l < 64; l += 1){
+              xEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.cos(Math.toRadians(l*18))));
+              yEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.sin(Math.toRadians(l*18))));     
             }
           }
 
-          if(internalFrameCount > 1000){
+          if(internalFrameCount > 950){
             internalFrameCount = 0;
           }
-
-
-          /*if(internalFrameCount >= 1000 && internalFrameCount % 5 == 0){
-            if(enemyMakeTear == true){
-              objectLimiter = 750;
-              heartAttack();
-            }
-          }*/
           
         }
+        if(bossHealth < 200 && bossPhase == 2){
+          lambSpeedX = 0;
+          lambSpeedY = 0;
+
+          //lambX = 800;
+          //lambY = 500;
+
+          internalFrameCount = 0;
+          bossPhase = 3;
+        }
+        if(bossPhase == 3){
+          if(internalFrameCount >= 50 && internalFrameCount % 5 == 0){
+            objectLimiter[0] = 750;
+            heartAttack();
+          }         
+        }
       }
+      
     }
     // DEATH GAMESTATE
     if (gameState == 2){
@@ -684,12 +682,14 @@ public class Sketch extends PApplet {
     lambY = (int) (lambY + lambSpeedY);
     
     for(int b = 0; b <= 3; b += 1){
-      xEnemySpeedArray[b][2] = (-1*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[b][2], (int)yEnemyArray[b][2], x, y)))));
-      yEnemySpeedArray[b][2] = (-1*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[b][2], (int)yEnemyArray[b][2], x, y)))));
+      if(enemyHealth[b] > 0){
+        xEnemySpeedArray[b][2] = (-1*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[b][2], (int)yEnemyArray[b][2], x, y)))));
+        yEnemySpeedArray[b][2] = (-1*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[b][2], (int)yEnemyArray[b][2], x, y)))));
 
-      xEnemyArray[b][2] = xEnemyArray[b][2] + xEnemySpeedArray[b][2];
-      yEnemyArray[b][2] = yEnemyArray[b][2] + yEnemySpeedArray[b][2];
+        xEnemyArray[b][2] = xEnemyArray[b][2] + xEnemySpeedArray[b][2];
+        yEnemyArray[b][2] = yEnemyArray[b][2] + yEnemySpeedArray[b][2];
 
+      }
     }
 
     //rect(lambX - 75, lambY - 75, 150, 150);  
@@ -702,20 +702,15 @@ public class Sketch extends PApplet {
     }
 
     //image(lamb, lambX - 75, lambY - 75, 150, 150);
-    //noTint();
-    if(wasHit == true){
-      tint(255,0,0);
-      image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
-    } else if (wasHit == false){
-      noTint();
-      image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
+    
+    noTint();
+    image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
 
-    }
+
     
     for (int f = 0; f < 5; f ++){
       if(enemyHealth[f] == 10){
-        println(enemyHealth[f]);
-        image(fly, (float) xEnemyArray[f][2] - 36, (float)yEnemyArray[f][2] - 18);
+        image(fly, (float) xEnemyArray[f][2] - 18, (float)yEnemyArray[f][2] - 11, 36, 22);
       }
     }
 
@@ -730,6 +725,11 @@ public class Sketch extends PApplet {
           wasHit = true;
         }
       }
+      for(int enemy_hitboxCheck = 0; enemy_hitboxCheck < objectLimiter[2]; enemy_hitboxCheck += 1){
+        if((x < (xEnemyArray[enemy_hitboxCheck][2] + 20)) && (x > (xEnemyArray[enemy_hitboxCheck][2] - 20)) && (y > (yEnemyArray[enemy_hitboxCheck][2] - 20)) && (y < (yEnemyArray[enemy_hitboxCheck][2] + 20))){
+
+        }
+      }      
     }
     if (intangibility == false && intangibilityTimer == 0 && wasHit == true){
       intangibilityTimer = 120;
@@ -827,6 +827,8 @@ public class Sketch extends PApplet {
       yEnemyArray[i][2] = lambY;
 
       //enemyHealth[i] = 10;
+      enemyHealth[i] = 10;
+      
     }
   }
 }
