@@ -47,10 +47,13 @@ public class Sketch extends PApplet {
   PImage background;
 
   PImage the_lamb_spritesheet;
+  PImage the_lamb_dead_sheet;
   PImage the_lamb_standing_sheet;
   PImage the_lamb_shooting_sheet;
   PImage[] the_lamb_frames;
+  PImage[] the_lamb_dead_frames;
   int intlamb_frames = 4;
+  int intlamb_dead_frames = 3;
   int the_lamb_frameWidth = 112;
 
   PImage YOU_DIED;
@@ -82,14 +85,14 @@ public class Sketch extends PApplet {
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 100;
+  int tearDamage = 15;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
   boolean wasHit = false;
   float life = 12; 
 
-  int maxHealth = 1000;
+  int maxHealth = 1500;
   int bossHealth = maxHealth;
 
   int[] enemyHealth = new int[1000];
@@ -137,6 +140,7 @@ public class Sketch extends PApplet {
       System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
+  
     
   }
 
@@ -161,7 +165,7 @@ public class Sketch extends PApplet {
       if(bossHealth > 0){
         stroke(0);
         fill(255, 0, 0);
-        rect(200, 700, (float)(1000/maxHealth * bossHealth), 10);
+        rect(200, 700,(float) (0.8* bossHealth), 10);
       } else if (bossHealth == 0){
         gameState = 3;
         enemyMakeTear = false;
@@ -170,8 +174,6 @@ public class Sketch extends PApplet {
       if(i > 197){
         i = 0;
         tearExist[i] = false;
-
-
       }
       if(enemy_i[0] > objectLimiter[0]){
         enemy_i[0] = 0;
@@ -275,6 +277,7 @@ public class Sketch extends PApplet {
       internalAttackDelay = (int)(bossHealth/10 + 50);
       if (bossHealth < maxHealth && bossHealth >= 0){
         internalFrameCount += 1;
+        println(internalFrameCount);
         if(bossHealth >= maxHealth/2 && bossPhase == 1){
           if (internalFrameCount == -1){
             lambHitWall = 0;
@@ -413,7 +416,7 @@ public class Sketch extends PApplet {
             octaAttack(22.5, 8);
           }
 
-          if(internalFrameCount >= 415){
+          if(internalFrameCount >= 415 && internalFrameCount <= 499){
             lambSpeedX = lambSpeedX * 0.90;
             lambSpeedY = lambSpeedY * 0.90;
             
@@ -438,8 +441,8 @@ public class Sketch extends PApplet {
           if(internalFrameCount == 571){
             try{
               for(int l = 0; l < 20; l += 1){
-                xEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
-                yEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+                xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+                yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
               }
             }            
             catch(IndexOutOfBoundsException error){
@@ -458,8 +461,8 @@ public class Sketch extends PApplet {
           if(internalFrameCount == 623){
             try{
               for(int l = 0; l < 20; l += 1){
-                xEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
-                yEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+                xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+                yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
               }
             }            
             catch(IndexOutOfBoundsException error){
@@ -477,8 +480,8 @@ public class Sketch extends PApplet {
           if(internalFrameCount == 675){
             try{
               for(int l = 0; l < 20; l += 1){
-                xEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
-                yEnemySpeedArray[enemy_i[0] - l][0] = (-20*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+                xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+                yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
               }
             }            
             catch(IndexOutOfBoundsException error){
@@ -492,7 +495,30 @@ public class Sketch extends PApplet {
               gridAttack(500, 500, dfds, 20); 
             }
           }*/
-          if(internalFrameCount == 725){
+          for(int d = 0; d < 75*3; d += 75){
+            if(internalFrameCount == 725 + d){
+              lambSpeedX = (int) (-25*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+              lambSpeedY = (int) (-25*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            }
+
+            if(internalFrameCount >= 725 + d && internalFrameCount <= 750 + d && internalFrameCount % 5 == 0){
+              enemyTear(lambX, lambY, (int) (playerAngle(lambX, lambY, x, y) + 30), 4);
+              enemyTear(lambX, lambY, (int) (playerAngle(lambX, lambY, x, y) - 30), 4);
+            }
+
+            if(internalFrameCount >= 750 + d && internalFrameCount <= 800 + d){
+              lambSpeedX = lambSpeedX * 0.90;
+              lambSpeedY = lambSpeedY * 0.90;
+              
+              if (Math.round(lambSpeedX) == 0) {
+                lambSpeedX = 0;
+              }
+              if (Math.round(lambSpeedY) == 0) {
+                lambSpeedY = 0;
+              }
+            }
+          }
+          if(internalFrameCount == 1000){
             for(int i = -20; i < 20; i += 5){
               for(int f = -20; f < 20; f += 5){
                 enemyTear(lambX + i, lambY + f, (int)playerAngle(lambX, lambY, x, y), -4);
@@ -500,19 +526,19 @@ public class Sketch extends PApplet {
             }
           }
 
-          if(internalFrameCount == 850){
+          if(internalFrameCount == 1100){
             for(int l = 0; l < 64; l += 1){
               xEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.cos(Math.toRadians(l*18))));
               yEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.sin(Math.toRadians(l*18))));     
             }
           }
 
-          if(internalFrameCount > 950){
+          if(internalFrameCount > 1150){
             internalFrameCount = 0;
           }
           
         }
-        if(bossHealth < 200 && bossPhase == 2){
+        if(bossHealth < 100 && bossPhase == 2){
           lambSpeedX = 0;
           lambSpeedY = 0;
 
@@ -526,7 +552,7 @@ public class Sketch extends PApplet {
           if(internalFrameCount >= 50 && internalFrameCount % 5 == 0){
             objectLimiter[0] = 750;
             heartAttack();
-          }         
+          }
         }
       }
       
@@ -543,6 +569,9 @@ public class Sketch extends PApplet {
       if (fadeWhite == 0){
         image(YOU_DIED, (width/2) - (384/2), (height/2) - (56/2));
       }
+    }
+    if(gameState == 3){
+      lamb.get(0,80, 1, 80);
     }
   }
 
@@ -702,10 +731,15 @@ public class Sketch extends PApplet {
     }
 
     //image(lamb, lambX - 75, lambY - 75, 150, 150);
+    if(gameState == 1){
+      noTint();
+      image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
+    }
+    if(gameState == 3){
+      noTint();
+      image(lamb, lambX - 75, lambY - 75, 72 * 2, 69 * 2);
+    }
     
-    noTint();
-    image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
-
 
     
     for (int f = 0; f < 5; f ++){
@@ -732,7 +766,7 @@ public class Sketch extends PApplet {
       }      
     }
     if (intangibility == false && intangibilityTimer == 0 && wasHit == true){
-      intangibilityTimer = 120;
+      intangibilityTimer = 60;
       intangibility = true;
       life -= 1;
       wasHit = false;
