@@ -573,6 +573,7 @@ public class Sketch extends PApplet {
           //lambX = 800;
           //lambY = 500;
 
+          enemy_i[0] = 0;
           internalFrameCount = 0;
           bossPhase = 3;
           enemy_i[2] = 0;
@@ -620,11 +621,13 @@ public class Sketch extends PApplet {
     }
     if (gameState == 4){
       background(fadeWhite);
-      if (fadeWhite > 0){
+      if (fadeWhite < 225){
         fadeWhite += 1;
       }
       if (fadeWhite == 225){
-        image(YOU_DIED, (width/2) - (384/2), (height/2) - (56/2));
+        text("you unlocked eternal mode", 800, 300);
+        text("press space to go back to the start menu", 800, 400);
+        text("press E to activate eternal mode", 800, 500);
       }
     }
   }
@@ -641,6 +644,12 @@ public class Sketch extends PApplet {
     }
     if (key == 97){
       rightPressed = true;
+    }
+    if(key == 101 && (gameState == 4 || gameState == 0)){
+      eternalMode = true;
+    }
+    if(key == 20 && gameState == 4){
+      gameState = 0;
     }
     if (key == CODED){
       if(keyCode == UP){
