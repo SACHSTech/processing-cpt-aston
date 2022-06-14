@@ -156,6 +156,7 @@ public class Sketch extends PApplet {
     
     //Title Screen
     if(gameState == 0){
+
     }
 
     // PLAYING GAMESTATE
@@ -648,8 +649,9 @@ public class Sketch extends PApplet {
     if(key == 101 && (gameState == 4 || gameState == 0)){
       eternalMode = true;
     }
-    if(key == 20 && gameState == 4){
+    if(key == 101 && gameState == 4){
       gameState = 0;
+      bossHealth = 1500;
     }
     if (key == CODED){
       if(keyCode == UP){
