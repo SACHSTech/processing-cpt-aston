@@ -136,7 +136,7 @@ public class Sketch extends PApplet {
       tearExist[i] = false;
       enemyTearExist[i] = false;
     }
-    objectLimiter[0] = 255;
+    objectLimiter[0] = 900;
     objectLimiter[2] = 3;
 
     the_lamb_spritesheet = loadImage("the lamb.png");
@@ -172,7 +172,7 @@ public class Sketch extends PApplet {
         stroke(0);
         fill(255, 0, 0);
         rect(200, 700,(float) (0.8* bossHealth), 10);
-      } else if (bossHealth == 0){
+      } else if (bossHealth <= 0){
         gameState = 3;
         enemyMakeTear = false;
       }
@@ -582,7 +582,6 @@ public class Sketch extends PApplet {
         }
         if(bossPhase == 3){
           if(internalFrameCount >= 50 && internalFrameCount <= 150 && internalFrameCount % 5 == 0){
-            objectLimiter[0] = 750;
             heartAttack();
           }
           if(internalFrameCount == 170){
@@ -649,9 +648,24 @@ public class Sketch extends PApplet {
     if(key == 101 && (gameState == 4 || gameState == 0)){
       eternalMode = true;
     }
-    if(key == 101 && gameState == 4){
+    if(key == 32 && gameState == 4){
       gameState = 0;
       bossHealth = 1500;
+      life = 12;
+      i = 0;
+      enemy_i[0] = 0;
+      bossPhase = 1;
+
+      x = width/2;
+      y = 500;
+      
+      lambX = width/2;
+      lambY = 200;
+
+      for(int reset_b = 0; reset_b <= 200; reset_b += 1){
+        enemyTearExist[reset_b] = false;
+      }
+
     }
     if (key == CODED){
       if(keyCode == UP){
