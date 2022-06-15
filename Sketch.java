@@ -590,11 +590,6 @@ public class Sketch extends PApplet {
           if(internalFrameCount >= 50 && internalFrameCount <= 150 && internalFrameCount % 5 == 0){
             heartAttack();
           }
-          if(internalFrameCount == 170){
-            octaAttack(0, 2);
-            octaAttack(15, 2);
-            octaAttack(30, 2);
-          }
           if(internalFrameCount > 175){
             internalFrameCount = 0;
           }
@@ -655,8 +650,7 @@ public class Sketch extends PApplet {
     }
     if(key == 101 && (gameState == 4 || gameState == 0) && eternalMode == false){
       eternalMode = true;
-    }
-    if(key == 101 && (gameState == 4 || gameState == 0) && eternalMode == true){
+    } else if(key == 101 && (gameState == 4 || gameState == 0) && eternalMode == true){
       eternalMode = false;
     }
     if(key == 32 && gameState == 4){
@@ -907,10 +901,12 @@ public class Sketch extends PApplet {
   public void heartAttack(){
     angle_i[2] += 1;
 
-    if(angle_i[2] > 360){
-      angle_i[2] = 0;
-      enemyMakeTear = false;
+    if(internalFrameCount % 60 == 0){
+      octaAttack(0 + angle_i[2], 2);
+      octaAttack(15 + angle_i[2], 2);
+      octaAttack(30 + angle_i[2], 2);
     }
+
 
     enemyTear(lambX, lambY, angle_i[2], 5);
     enemyTear(lambX, lambY, angle_i[2] + 90, 5);
