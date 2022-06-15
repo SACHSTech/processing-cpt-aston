@@ -151,7 +151,7 @@ public class Sketch extends PApplet {
       System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
-    text = createFont("Times", 32);
+    text = createFont("Yu Gothic", 32);
     textFont(text);
     fill(0);
   }
@@ -632,9 +632,9 @@ public class Sketch extends PApplet {
       if (fadeWhite == 225){
         textFont(text);
         fill(0);
-        text("you unlocked eternal mode", 800 - 150, 300);
-        text("press space to go back to the fight area", 800- 150, 400);
-        text("press E to activate eternal mode", 800 - 150, 500);
+        text("You unlocked eternal mode!", 800 - 225, 300);
+        text("Press space to go back to restart the fight", 800- 300, 400);
+        text("Press E to activate eternal mode", 800 - 250, 500);
       }
     }
   }
