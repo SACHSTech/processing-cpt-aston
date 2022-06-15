@@ -4,8 +4,8 @@ import processing.core.PImage;
 
 
 /**
- * 
- * 
+ * Authour: Aston Cheng
+ * Date: June 15, 2022 
  */
 
 public class Sketch extends PApplet {
@@ -152,6 +152,7 @@ public class Sketch extends PApplet {
       System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
+
     text = createFont("Yu Gothic", 32);
     textFont(text);
     fill(0);
@@ -280,11 +281,7 @@ public class Sketch extends PApplet {
       //movement engine
       playerMovementEngine();  
       intangibilityEngine();
-
-
-
-
-      
+   
 
       //println(playerAngle((lambX), (lambY), x - 30, y - 25));
       //println(angle_i);
@@ -294,317 +291,7 @@ public class Sketch extends PApplet {
       //println(lambHitWall);
 
       attackIntensity = (1000/750)*bossHealth + 10;
-
-      if (bossHealth < maxHealth && bossHealth >= 0){
-        internalFrameCount += 1;
-        //println(internalFrameCount);
-        if(eternalMode == true && (bossPhase == 1 || bossPhase == 2)){
-          for(int eternalIntensity = 0; eternalIntensity <= 1000; eternalIntensity += attackIntensity){
-            if(internalFrameCount == eternalIntensity){
-              octaAttack(0, 2);
-              octaAttack(15, 2);
-              octaAttack(30, 2);
-            }
-          }
-        }
-        if(bossHealth >= maxHealth/2 && bossPhase == 1){
-          if (internalFrameCount == -1){
-            lambHitWall = 0;
-          }
-                
-          if(internalFrameCount >= 30 && internalFrameCount < 35){
-            triAttack();
-          }
-          if(internalFrameCount >= 30 + (60 * internalAttackDelay/100) && internalFrameCount < 35 + (60 * internalAttackDelay/100)){
-            triAttack();
-          }
-          if(internalFrameCount >= 30 + 2*(60 * internalAttackDelay/100) && internalFrameCount < 35 + 2*(60 * internalAttackDelay/100)){
-            triAttack();
-          }
-                    
-          if(internalFrameCount == 350){
-          //if(internalFrameCount == 155 + internalAttackDelay){
-            sniperAttack(playerAngle(lambX, lambY, x, y), 20);
-          }
-          if(internalFrameCount == 400){
-          //if(internalFrameCount == 205 + internalAttackDelay){
-            sniperAttack(playerAngle(lambX, lambY, x, y), 20);
-          }
-          if(internalFrameCount == 450){
-          //if(internalFrameCount == 255 + internalAttackDelay){
-            sniperAttack(playerAngle(lambX, lambY, x, y), 20);
-          }
-
-          if(internalFrameCount >= 550){
-            if(internalFrameCount == 551){
-          //if(internalFrameCount >= 400 + (internalAttackDelay)){
-            //if(internalFrameCount == 400 + (internalAttackDelay)){
-              lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-              lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            }
-              
-            //if (lambX <= 50 || lambX >= width - 50 && lambHitWall < 3){
-            if (lambX <= 50 || lambX >= width - 50){
-
-              lambHitWall += 1;
-              sniperAttack(playerAngle(lambX, lambY, x, y), 19);
-              //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
-              //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
-              sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
-              
-              //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
-
-              //lambX = (width) - lambX;
-              //lambY = (height) - lambY;
-              //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-              //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-              lambSpeedX = lambSpeedX * -1;
-            } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
-            else if(lambY <= 50 || lambY >= height -50){
-              lambHitWall += 1;
-              sniperAttack(playerAngle(lambX, lambY, x, y), 19);
-              //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
-              //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
-              //sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
-              //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
-
-              //lambX = (width) - lambX;
-              //lambY = (height) - lambY;
-              //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-              //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-              lambSpeedY = lambSpeedY * -1;
-            }
-          } else{
-            if (lambX <= 50 || lambX >= width - 50){
-              lambSpeedX = lambSpeedX * -1;
-            } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
-            else if(lambY <= 50 || lambY >= height -50){
-              lambSpeedY = lambSpeedY * -1;
-            }
-          }
-          if (lambHitWall >= 3 && internalFrameCount <= 255){
-            lambSpeedX = lambSpeedX * 0.90;
-            lambSpeedY = lambSpeedY * 0.90;
-            
-            if (Math.round(lambSpeedX) == 0) {
-              lambSpeedX = 0;
-            }
-            if (Math.round(lambSpeedY) == 0) {
-              lambSpeedY = 0;
-            }
-
-          }
-          if (lambHitWall >= 3 && internalFrameCount >= 0){
-            internalFrameCount = -60;
-
-            //lambX = width/2;
-            //lambY = 50;
-            //lambSpeedX = 0;
-            //lambSpeedY = 20;
-          }
-        }
-        else if(bossHealth < maxHealth/2 && bossPhase == 1){
-          lambSpeedX = 0;
-          lambSpeedY = 0;
-
-          //lambX = 800;
-          //lambY = 500;
-
-          internalFrameCount = 0;
-
-          spawnFlies(4);
-          bossPhase = 2;
-
-        }
-        if (bossPhase == 2){
-          if(internalFrameCount == 50){
-          }
-          
-          /*if(internalFrameCount >= 100 && internalFrameCount <= 125 && internalFrameCount % 5 == 0){
-            gridAttack(0, 0);
-          }*/
-          if(internalFrameCount >= 150 && internalFrameCount < 190 && internalFrameCount % 5 == 0){
-            
-            lambSpeedX = (int) (-2*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            lambSpeedY = (int) (-2*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            
-            octaAttack(0, 6);
-          }
-
-          if(internalFrameCount >= 250 && internalFrameCount < 290 && internalFrameCount % 5 == 0){
-            lambSpeedX = (int) (-4*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            lambSpeedY = (int) (-4*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-
-            octaAttack(22.5, 8);
-          }
-
-          if(internalFrameCount >= 350 && internalFrameCount < 390 && internalFrameCount % 5 == 0){
-            lambSpeedX = (int) (-6*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            lambSpeedY = (int) (-6*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-
-            octaAttack(22.5, 8);
-          }
-
-          if(internalFrameCount >= 415 && internalFrameCount <= 499){
-            lambSpeedX = lambSpeedX * 0.90;
-            lambSpeedY = lambSpeedY * 0.90;
-            
-            if (Math.round(lambSpeedX) == 0) {
-              lambSpeedX = 0;
-            }
-            if (Math.round(lambSpeedY) == 0) {
-              lambSpeedY = 0;
-            }
-          }
-          if(internalFrameCount == 499){
-            enemy_i[0] = 0;
-          }
-          
-          if(internalFrameCount >= 500 && internalFrameCount < 550 && internalFrameCount % 10 == 0){
-            enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
-          }
-
-          if(internalFrameCount == 571){
-            try{
-              for(int l = 0; l < 20; l += 1){
-                xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
-                yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
-              }
-            }            
-            catch(IndexOutOfBoundsException error){
-
-            }
-            //enemy_i[0] = 0;
-          }
-
-          if(internalFrameCount >= 572 && internalFrameCount < 622 && internalFrameCount % 10 == 0){
-            enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
-          }
-
-          if(internalFrameCount == 623){
-            try{
-              for(int l = 0; l < 20; l += 1){
-                xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
-                yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
-              }
-            }            
-            catch(IndexOutOfBoundsException error){
-
-            }
-            //enemy_i[0] = 0;
-          }
-          if(internalFrameCount >= 624 && internalFrameCount < 674 && internalFrameCount % 10 == 0){
-            enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
-            enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
-          }
-
-          if(internalFrameCount == 675){
-            try{
-              for(int l = 0; l < 20; l += 1){
-                xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
-                yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
-              }
-            }            
-            catch(IndexOutOfBoundsException error){
-
-            }
-            enemy_i[0] = 0;
-          }
-          /*
-          if(internalFrameCount == 650){
-            for(int dfds = 0; dfds <= 360; dfds += 45){
-              gridAttack(500, 500, dfds, 20); 
-            }
-          }*/
-
-          if(internalFrameCount >= 725 && internalFrameCount <= 875){
-            if (lambX <= 50 || lambX >= width - 50){
-              lambSpeedX = lambSpeedX * -1;
-
-            }
-            if(lambY <= 50 || lambY >= height -50){
-              lambSpeedY = lambSpeedY * -1;
-
-            }
-          }
-          for(int d = 0; d < 75*3; d += 75){
-            if(internalFrameCount == 725 + d){
-              lambSpeedX = (int) (-20*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-              lambSpeedY = (int) (-20*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            }
-
-            if(internalFrameCount >= 725 + d && internalFrameCount <= 750 + d && internalFrameCount % 5 == 0){
-              enemyTear(lambX, lambY, (int) (playerAngle(lambX, lambY, x, y) + 30), 4);
-              enemyTear(lambX, lambY, (int) (playerAngle(lambX, lambY, x, y) - 30), 4);
-            }
-
-            if(internalFrameCount >= 750 + d && internalFrameCount <= 800 + d){
-              lambSpeedX = lambSpeedX * 0.90;
-              lambSpeedY = lambSpeedY * 0.90;
-              
-              if (Math.round(lambSpeedX) == 0) {
-                lambSpeedX = 0;
-              }
-              if (Math.round(lambSpeedY) == 0) {
-                lambSpeedY = 0;
-              }
-            }
-          }
-          if(internalFrameCount == 1000){
-            for(int i = -20; i < 20; i += 5){
-              for(int f = -20; f < 20; f += 5){
-                enemyTear(lambX + i, lambY + f, (int)playerAngle(lambX, lambY, x, y), -4);
-              }
-            }
-          }
-
-          if(internalFrameCount == 1100){
-            for(int l = 0; l < 64; l += 1){
-              xEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.cos(Math.toRadians(l*18))));
-              yEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.sin(Math.toRadians(l*18))));     
-            }
-          }
-
-          if(internalFrameCount > 1150){
-            internalFrameCount = 0;
-          }
-          
-        }
-        if(bossHealth < 200 && bossPhase == 2){
-          lambSpeedX = 0;
-          lambSpeedY = 0;
-
-          //lambX = 800;
-          //lambY = 500;
-
-          enemy_i[0] = 0;
-          internalFrameCount = 0;
-          bossPhase = 3;
-          enemy_i[2] = 0;
-          objectLimiter[2] = 0;
-        }
-        if(bossPhase == 3){
-          if(internalFrameCount >= 50 && internalFrameCount <= 150 && internalFrameCount % 5 == 0){
-            heartAttack();
-          }
-          if(internalFrameCount % 5 == 0){
-            enemyTear(200, 0, 270, -10);
-            enemyTear(1400, 0, 270, -10);
-          }
-          if(internalFrameCount > 175){
-            internalFrameCount = 0;
-          }
-        }
-      }
-      
+      battleLoop();
     }
     // DEATH GAMESTATE
     if (gameState == 2){
@@ -885,6 +572,319 @@ public class Sketch extends PApplet {
     if (intangibilityTimer == 0 && intangibility == true){
       intangibility = false;
     }
+  }
+  public void battleLoop(){
+    
+    if (bossHealth < maxHealth && bossHealth >= 0){
+      internalFrameCount += 1;
+      //println(internalFrameCount);
+      if(eternalMode == true && (bossPhase == 1 || bossPhase == 2)){
+        for(int eternalIntensity = 0; eternalIntensity <= 1000; eternalIntensity += attackIntensity){
+          if(internalFrameCount == eternalIntensity){
+            octaAttack(0, 2);
+            octaAttack(15, 2);
+            octaAttack(30, 2);
+          }
+        }
+      }
+      if(bossHealth >= maxHealth/2 && bossPhase == 1){
+        if (internalFrameCount == -1){
+          lambHitWall = 0;
+        }
+              
+        if(internalFrameCount >= 30 && internalFrameCount < 35){
+          triAttack();
+        }
+        if(internalFrameCount >= 30 + (60 * internalAttackDelay/100) && internalFrameCount < 35 + (60 * internalAttackDelay/100)){
+          triAttack();
+        }
+        if(internalFrameCount >= 30 + 2*(60 * internalAttackDelay/100) && internalFrameCount < 35 + 2*(60 * internalAttackDelay/100)){
+          triAttack();
+        }
+                  
+        if(internalFrameCount == 350){
+        //if(internalFrameCount == 155 + internalAttackDelay){
+          sniperAttack(playerAngle(lambX, lambY, x, y), 20);
+        }
+        if(internalFrameCount == 400){
+        //if(internalFrameCount == 205 + internalAttackDelay){
+          sniperAttack(playerAngle(lambX, lambY, x, y), 20);
+        }
+        if(internalFrameCount == 450){
+        //if(internalFrameCount == 255 + internalAttackDelay){
+          sniperAttack(playerAngle(lambX, lambY, x, y), 20);
+        }
+
+        if(internalFrameCount >= 550){
+          if(internalFrameCount == 551){
+        //if(internalFrameCount >= 400 + (internalAttackDelay)){
+          //if(internalFrameCount == 400 + (internalAttackDelay)){
+            lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          }
+            
+          //if (lambX <= 50 || lambX >= width - 50 && lambHitWall < 3){
+          if (lambX <= 50 || lambX >= width - 50){
+
+            lambHitWall += 1;
+            sniperAttack(playerAngle(lambX, lambY, x, y), 19);
+            //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
+            //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
+            sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
+            
+            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
+
+            //lambX = (width) - lambX;
+            //lambY = (height) - lambY;
+            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedX = lambSpeedX * -1;
+          } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
+          else if(lambY <= 50 || lambY >= height -50){
+            lambHitWall += 1;
+            sniperAttack(playerAngle(lambX, lambY, x, y), 19);
+            //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
+            //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
+            //sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
+            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
+
+            //lambX = (width) - lambX;
+            //lambY = (height) - lambY;
+            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedY = lambSpeedY * -1;
+          }
+        } else{
+          if (lambX <= 50 || lambX >= width - 50){
+            lambSpeedX = lambSpeedX * -1;
+          } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
+          else if(lambY <= 50 || lambY >= height -50){
+            lambSpeedY = lambSpeedY * -1;
+          }
+        }
+        if (lambHitWall >= 3 && internalFrameCount <= 255){
+          lambSpeedX = lambSpeedX * 0.90;
+          lambSpeedY = lambSpeedY * 0.90;
+          
+          if (Math.round(lambSpeedX) == 0) {
+            lambSpeedX = 0;
+          }
+          if (Math.round(lambSpeedY) == 0) {
+            lambSpeedY = 0;
+          }
+
+        }
+        if (lambHitWall >= 3 && internalFrameCount >= 0){
+          internalFrameCount = -60;
+
+          //lambX = width/2;
+          //lambY = 50;
+          //lambSpeedX = 0;
+          //lambSpeedY = 20;
+        }
+      }
+      else if(bossHealth < maxHealth/2 && bossPhase == 1){
+        lambSpeedX = 0;
+        lambSpeedY = 0;
+
+        //lambX = 800;
+        //lambY = 500;
+
+        internalFrameCount = 0;
+
+        spawnFlies(4);
+        bossPhase = 2;
+
+      }
+      if (bossPhase == 2){
+        if(internalFrameCount == 50){
+        }
+        
+        /*if(internalFrameCount >= 100 && internalFrameCount <= 125 && internalFrameCount % 5 == 0){
+          gridAttack(0, 0);
+        }*/
+        if(internalFrameCount >= 150 && internalFrameCount < 190 && internalFrameCount % 5 == 0){
+          
+          lambSpeedX = (int) (-2*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          lambSpeedY = (int) (-2*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          
+          octaAttack(0, 6);
+        }
+
+        if(internalFrameCount >= 250 && internalFrameCount < 290 && internalFrameCount % 5 == 0){
+          lambSpeedX = (int) (-4*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          lambSpeedY = (int) (-4*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+
+          octaAttack(22.5, 8);
+        }
+
+        if(internalFrameCount >= 350 && internalFrameCount < 390 && internalFrameCount % 5 == 0){
+          lambSpeedX = (int) (-6*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          lambSpeedY = (int) (-6*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+
+          octaAttack(22.5, 8);
+        }
+
+        if(internalFrameCount >= 415 && internalFrameCount <= 499){
+          lambSpeedX = lambSpeedX * 0.90;
+          lambSpeedY = lambSpeedY * 0.90;
+          
+          if (Math.round(lambSpeedX) == 0) {
+            lambSpeedX = 0;
+          }
+          if (Math.round(lambSpeedY) == 0) {
+            lambSpeedY = 0;
+          }
+        }
+        if(internalFrameCount == 499){
+          enemy_i[0] = 0;
+        }
+        
+        if(internalFrameCount >= 500 && internalFrameCount < 550 && internalFrameCount % 10 == 0){
+          enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
+        }
+
+        if(internalFrameCount == 571){
+          try{
+            for(int l = 0; l < 20; l += 1){
+              xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+              yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+            }
+          }            
+          catch(IndexOutOfBoundsException error){
+
+          }
+          //enemy_i[0] = 0;
+        }
+
+        if(internalFrameCount >= 572 && internalFrameCount < 622 && internalFrameCount % 10 == 0){
+          enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
+        }
+
+        if(internalFrameCount == 623){
+          try{
+            for(int l = 0; l < 20; l += 1){
+              xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+              yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+            }
+          }            
+          catch(IndexOutOfBoundsException error){
+
+          }
+          //enemy_i[0] = 0;
+        }
+        if(internalFrameCount >= 624 && internalFrameCount < 674 && internalFrameCount % 10 == 0){
+          enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 165  + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 195 + internalFrameCount % 2, 4);
+          enemyTear(lambX, lambY, 345 + internalFrameCount % 2, 4);
+        }
+
+        if(internalFrameCount == 675){
+          try{
+            for(int l = 0; l < 20; l += 1){
+              xEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.cos(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));
+              yEnemySpeedArray[enemy_i[0] - l][0] = (-24*(Math.sin(Math.toRadians(playerAngle((int)xEnemyArray[enemy_i[0] - l][0], (int)yEnemyArray[enemy_i[0] - l][0], x, y)))));     
+            }
+          }            
+          catch(IndexOutOfBoundsException error){
+
+          }
+          enemy_i[0] = 0;
+        }
+        /*
+        if(internalFrameCount == 650){
+          for(int dfds = 0; dfds <= 360; dfds += 45){
+            gridAttack(500, 500, dfds, 20); 
+          }
+        }*/
+
+        if(internalFrameCount >= 725 && internalFrameCount <= 875){
+          if (lambX <= 50 || lambX >= width - 50){
+            lambSpeedX = lambSpeedX * -1;
+
+          }
+          if(lambY <= 50 || lambY >= height -50){
+            lambSpeedY = lambSpeedY * -1;
+
+          }
+        }
+        for(int d = 0; d < 75*3; d += 75){
+          if(internalFrameCount == 725 + d){
+            lambSpeedX = (int) (-20*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            lambSpeedY = (int) (-20*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+          }
+
+          if(internalFrameCount >= 725 + d && internalFrameCount <= 750 + d && internalFrameCount % 5 == 0){
+            enemyTear(lambX, lambY, (int) (playerAngle(lambX, lambY, x, y) + 30), 4);
+            enemyTear(lambX, lambY, (int) (playerAngle(lambX, lambY, x, y) - 30), 4);
+          }
+
+          if(internalFrameCount >= 750 + d && internalFrameCount <= 800 + d){
+            lambSpeedX = lambSpeedX * 0.90;
+            lambSpeedY = lambSpeedY * 0.90;
+            
+            if (Math.round(lambSpeedX) == 0) {
+              lambSpeedX = 0;
+            }
+            if (Math.round(lambSpeedY) == 0) {
+              lambSpeedY = 0;
+            }
+          }
+        }
+        if(internalFrameCount == 1000){
+          for(int i = -20; i < 20; i += 5){
+            for(int f = -20; f < 20; f += 5){
+              enemyTear(lambX + i, lambY + f, (int)playerAngle(lambX, lambY, x, y), -4);
+            }
+          }
+        }
+
+        if(internalFrameCount == 1100){
+          for(int l = 0; l < 64; l += 1){
+            xEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.cos(Math.toRadians(l*18))));
+            yEnemySpeedArray[enemy_i[0] - l][0] = (-15*(Math.sin(Math.toRadians(l*18))));     
+          }
+        }
+
+        if(internalFrameCount > 1150){
+          internalFrameCount = 0;
+        }
+        
+      }
+      if(bossHealth < 200 && bossPhase == 2){
+        lambSpeedX = 0;
+        lambSpeedY = 0;
+
+        //lambX = 800;
+        //lambY = 500;
+
+        enemy_i[0] = 0;
+        internalFrameCount = 0;
+        bossPhase = 3;
+        enemy_i[2] = 0;
+        objectLimiter[2] = 0;
+      }
+      if(bossPhase == 3){
+        if(internalFrameCount >= 50 && internalFrameCount <= 150 && internalFrameCount % 5 == 0){
+          heartAttack();
+        }
+        if(internalFrameCount % 5 == 0){
+          enemyTear(200, 0, 270, -10);
+          enemyTear(1400, 0, 270, -10);
+        }
+        if(internalFrameCount > 175){
+          internalFrameCount = 0;
+        }
+      }
+    }
+  
   }
 
   public double playerAngle(int xShooter, int yShooter, int xTarget, int yTarget){
