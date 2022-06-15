@@ -88,7 +88,7 @@ public class Sketch extends PApplet {
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 3;
+  int tearDamage = 2;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
@@ -686,8 +686,8 @@ public class Sketch extends PApplet {
 
       fadeWhite = 255;
 
-      for(int reset_b = 0; reset_b <= 200; reset_b += 1){
-        enemyTearExist[reset_b] = false;
+      for(int reset_b = 0; reset_b < 200; reset_b += 1){
+        tearExist[reset_b] = false;
       }
     }
     if (key == CODED){
