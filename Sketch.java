@@ -88,7 +88,7 @@ public class Sketch extends PApplet {
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 2;
+  int tearDamage = 3;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
