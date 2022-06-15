@@ -88,7 +88,7 @@ public class Sketch extends PApplet {
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 4;
+  int tearDamage = 3;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
@@ -573,7 +573,7 @@ public class Sketch extends PApplet {
           }
           
         }
-        if(bossHealth < 100 && bossPhase == 2){
+        if(bossHealth < 200 && bossPhase == 2){
           lambSpeedX = 0;
           lambSpeedY = 0;
 
@@ -589,6 +589,10 @@ public class Sketch extends PApplet {
         if(bossPhase == 3){
           if(internalFrameCount >= 50 && internalFrameCount <= 150 && internalFrameCount % 5 == 0){
             heartAttack();
+          }
+          if(internalFrameCount % 5 == 0){
+            enemyTear(200, 0, 270, -10);
+            enemyTear(1400, 0, 270, -10);
           }
           if(internalFrameCount > 175){
             internalFrameCount = 0;
@@ -629,7 +633,7 @@ public class Sketch extends PApplet {
         textFont(text);
         fill(0);
         text("you unlocked eternal mode", 800 - 150, 300);
-        text("press space to go back to the start menu", 800- 150, 400);
+        text("press space to go back to the fight area", 800- 150, 400);
         text("press E to activate eternal mode", 800 - 150, 500);
       }
     }
