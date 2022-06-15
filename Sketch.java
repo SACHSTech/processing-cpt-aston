@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 
 
@@ -87,7 +88,7 @@ public class Sketch extends PApplet {
   int[] angle_i = new int[10];
 
   int tearDelay = 0;
-  int tearDamage = 3;
+  int tearDamage = 4;
 
   boolean intangibility = false;
   int intangibilityTimer = 0;
@@ -112,6 +113,8 @@ public class Sketch extends PApplet {
   boolean eternalMode = false;
 
   int fadeWhite = 255;
+
+  PFont text;
 
   public void settings() {
     size(width, height);
@@ -148,6 +151,9 @@ public class Sketch extends PApplet {
       System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
+    text = createFont("Times", 32);
+    textFont(text);
+    fill(0);
   }
 
   public void draw() {
@@ -625,9 +631,11 @@ public class Sketch extends PApplet {
         fadeWhite += 1;
       }
       if (fadeWhite == 225){
-        text("you unlocked eternal mode", 800, 300);
-        text("press space to go back to the start menu", 800, 400);
-        text("press E to activate eternal mode", 800, 500);
+        textFont(text);
+        fill(0);
+        text("you unlocked eternal mode", 800 - 150, 300);
+        text("press space to go back to the start menu", 800- 150, 400);
+        text("press E to activate eternal mode", 800 - 150, 500);
       }
     }
   }
@@ -645,8 +653,11 @@ public class Sketch extends PApplet {
     if (key == 97){
       rightPressed = true;
     }
-    if(key == 101 && (gameState == 4 || gameState == 0)){
+    if(key == 101 && (gameState == 4 || gameState == 0) && eternalMode == false){
       eternalMode = true;
+    }
+    if(key == 101 && (gameState == 4 || gameState == 0) && eternalMode == true){
+      eternalMode = false;
     }
     if(key == 32 && gameState == 4){
       gameState = 0;
@@ -692,7 +703,7 @@ public class Sketch extends PApplet {
         tearRightPressed = true;
         
       }
-    } if(keyPressed == true && gameState == 0){
+    } if(keyPressed == true && gameState == 0 && gameState != 4){
       background_room = loadImage("touhou background.jpg");  
       gameState = 1;
     }
