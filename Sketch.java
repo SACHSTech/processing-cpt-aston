@@ -167,7 +167,7 @@ public class Sketch extends PApplet {
 
     // PLAYING GAMESTATE
     if(gameState == 1 || gameState == 3){
-
+      
       for(int displayHearts = 0; displayHearts < life; displayHearts ++){
         image(heart, (displayHearts*25) + 100, 45);
       }
@@ -657,7 +657,7 @@ public class Sketch extends PApplet {
     } else if(key == 101 && (gameState == 4 || gameState == 0) && eternalMode == true){
       eternalMode = false;
     }
-    if(key == 32 && gameState == 4){
+    if(key == 32 && (gameState == 4 || gameState == 2)){
       gameState = 0;
       bossHealth = 1500;
       life = 12;
@@ -674,7 +674,6 @@ public class Sketch extends PApplet {
       for(int reset_b = 0; reset_b <= 200; reset_b += 1){
         enemyTearExist[reset_b] = false;
       }
-
     }
     if (key == CODED){
       if(keyCode == UP){
@@ -701,7 +700,8 @@ public class Sketch extends PApplet {
         tearRightPressed = true;
         
       }
-    } if(keyPressed == true && gameState == 0 && gameState != 4){
+    } 
+    if(keyPressed == true && gameState == 0 && gameState != 4){
       background_room = loadImage("touhou background.jpg");  
       gameState = 1;
     }
@@ -848,11 +848,15 @@ public class Sketch extends PApplet {
           wasHit = true;
         }
       }
-      for(int enemy_hitboxCheck = 0; enemy_hitboxCheck < objectLimiter[2]; enemy_hitboxCheck += 1){
-        if((x < (xEnemyArray[enemy_hitboxCheck][2] + 20)) && (x > (xEnemyArray[enemy_hitboxCheck][2] - 20)) && (y > (yEnemyArray[enemy_hitboxCheck][2] - 20)) && (y < (yEnemyArray[enemy_hitboxCheck][2] + 20))){
-          wasHit = true;
-        }
-      }      
+      for(int k = 0; k < 10; k += 1){
+        if(enemyHealth[k] == 10){
+          for(int enemy_hitboxCheck = 0; enemy_hitboxCheck < objectLimiter[2]; enemy_hitboxCheck += 1){
+            if((x < (xEnemyArray[enemy_hitboxCheck][2] + 20)) && (x > (xEnemyArray[enemy_hitboxCheck][2] - 20)) && (y > (yEnemyArray[enemy_hitboxCheck][2] - 20)) && (y < (yEnemyArray[enemy_hitboxCheck][2] + 20))){
+              wasHit = true;
+            }
+          }  
+        }    
+      }
     }
     if (intangibility == false && intangibilityTimer == 0 && wasHit == true){
       intangibilityTimer = 60;
