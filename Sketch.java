@@ -115,6 +115,7 @@ public class Sketch extends PApplet {
   int fadeWhite = 255;
 
   PFont text;
+  PFont timesFont;
 
   public void settings() {
     size(width, height);
@@ -153,6 +154,10 @@ public class Sketch extends PApplet {
     }
     text = createFont("Yu Gothic", 32);
     textFont(text);
+    fill(0);
+
+    timesFont = createFont("Times New Roman", 32);
+    textFont(timesFont);
     fill(0);
   }
 
@@ -611,7 +616,12 @@ public class Sketch extends PApplet {
         fadeWhite -= 1;
       }
       if (fadeWhite == 0){
+        noTint();
         image(YOU_DIED, (width/2) - (384/2), (height/2) - (56/2));
+
+        textFont(timesFont);
+        fill(255);
+        text("Press Space to Try Again", (width/2) - 150, 500);
       }
     }
     if(gameState == 3){
@@ -670,6 +680,11 @@ public class Sketch extends PApplet {
       
       lambX = width/2;
       lambY = 200;
+
+      lambSpeedX = 0;
+      lambSpeedY = 0;
+
+      fadeWhite = 255;
 
       for(int reset_b = 0; reset_b <= 200; reset_b += 1){
         enemyTearExist[reset_b] = false;
