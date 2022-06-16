@@ -5,10 +5,10 @@ Put your program description here.
 
 WRATH OF THE LAMB
 
-This game is a bullet hell game. 
+This game is a bullet hell game, a game genre categorized with difficult "bullets" fired at the player in patterns.
 
 MOVE with WASD, SHOOt with ARROW KEYS. Defeat the Lamb, a multistage boss with terrifiying attacks. Defeat him, and you can unlock a secret mode, which makes the game harder.
 
-There is no score. The only objective is to survive and beat the boss. You can shoot diagonally, horizantally, vertiacally, and while moving.
+There is no score. The only objective is to survive and beat the boss. You can shoot diagonally, horizantally, vertiacally, and while moving. The boss will use his own attacks in creative patterns. Be Aware, Be Careful, Don't Panic.
 
 WARNING: ETERNAL MODE MIGHT BREAK SOME ATTACKS, MAKING THEM HARDER TO DODGE.
