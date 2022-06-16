@@ -121,16 +121,14 @@ public class Sketch extends PApplet {
     size(width, height);
   }
   public void setup() {
-    //background(255, 255, 255);
 
     img = loadImage("010.01.00.png");
-    //background_room = loadImage("touhou background.jpg");  
     background_room = loadImage("title.png");
 
     heart = loadImage("PlayerHeart2.png");
     lamb = loadImage("273.10.00.png");
     YOU_DIED = loadImage("YOU DIED BLACK.png");
-    //fly = loadImage("013.00.00.png");
+
     fly = loadImage("256.00.00.png");
     trophy = loadImage("trophy.jpg");
     chest = loadImage("chest.png");
@@ -149,7 +147,6 @@ public class Sketch extends PApplet {
     the_lamb_frames = new PImage[intlamb_frames];
 
     for(int frameNum = 0; frameNum < the_lamb_frames.length; frameNum++ ){
-      System.out.println("load frames");
       the_lamb_frames[frameNum] = the_lamb_standing_sheet.get(the_lamb_frameWidth*frameNum, 0, the_lamb_frameWidth, 80);
     }
 
@@ -164,16 +161,16 @@ public class Sketch extends PApplet {
 
   public void draw() {
     background(background_room);
-    //background(255, 255, 255);
     
     //Title Screen
     if(gameState == 0){
 
     }
 
-    // PLAYING GAMESTATE
+    //In-Game State
     if(gameState == 1 || gameState == 3){
       
+      // Life and BossHealth
       for(int displayHearts = 0; displayHearts < life; displayHearts ++){
         image(heart, (displayHearts*25) + 100, 45);
       }
@@ -189,6 +186,7 @@ public class Sketch extends PApplet {
         enemyMakeTear = false;
       }
       
+      //tears array looping
       if(i > 197){
         i = 1;
         tearExist[i] = false;
@@ -196,6 +194,8 @@ public class Sketch extends PApplet {
       if(enemy_i[0] > objectLimiter[0]){
         enemy_i[0] = 0;
       }
+    
+      //making player tears
       if (tearDelay == 0){
         if(makeTear == true){
           i ++;
@@ -214,6 +214,7 @@ public class Sketch extends PApplet {
         tearDelay -= 1;
       }
   
+      //giving player tears attributes
       for (int f = 0; f <= 199; f ++){
         if (tearDelay > 0){
           if (tearUpPressed) {
@@ -240,7 +241,6 @@ public class Sketch extends PApplet {
 
           if ((xArray[f] < (lambX + 50)) && (xArray[f] > lambX - 50) && (yArray[f] > lambY - 50) && (yArray[f] < (lambY + 50))){
             bossHealth -= tearDamage;
-            println(bossHealth);
             tearExist[f] = false;
           }
           if (xArray[f] < -50 || xArray[f] > width + 50|| yArray[f] < -50 || yArray[f] > height + 50){
@@ -256,6 +256,8 @@ public class Sketch extends PApplet {
           }
         }
       }
+
+      //giving enemy tears attributes
       for (int f = 0; f <= objectLimiter[0]; f ++){
         if(enemyTearExist[f] == true){
           xEnemyArray[f][0] = xEnemyArray[f][0] + xEnemySpeedArray[f][0];
@@ -278,18 +280,11 @@ public class Sketch extends PApplet {
       }
       
 
-      //movement engine
       playerMovementEngine();  
       intangibilityEngine();
    
 
-      //println(playerAngle((lambX), (lambY), x - 30, y - 25));
-      //println(angle_i);
-      //println(tearUpPressed + " " + tearDownPressed + " " + tearLeftPressed + " " + tearRightPressed);
-      //println(internalFrameCount);
-      //enemyTear(lambX, lambY, (int) playerAngle((lambX), (lambY), x, y), -5);
-      //println(lambHitWall);
-
+      //the bosses' attack patterns
       attackIntensity = (1000/750)*bossHealth + 10;
       battleLoop();
     }
@@ -311,6 +306,8 @@ public class Sketch extends PApplet {
         text("Press Space to Try Again", (width/2) - 150, 500);
       }
     }
+
+    //spawn the ending chest
     if(gameState == 3){
       lamb.get(0,80, 1, 80);
       image(chest, 800 - 112, 400 - 91);
@@ -318,9 +315,10 @@ public class Sketch extends PApplet {
       if(x > 800 - 112 && x < 800 + 112 && y < 400 + 91 && y > 400 - 91){
         gameState = 4;
         fadeWhite = 0;
-
       } 
     }
+
+    //victory screen
     if (gameState == 4){
       background(fadeWhite);
       if (fadeWhite < 225){
@@ -335,7 +333,9 @@ public class Sketch extends PApplet {
       }
     }
   }
-
+/**
+ * The keyPressed method built into processing. Checks if a key is pressed. No return value.
+ */
   public void keyPressed(){
     if (key == 119){
       upPressed = true;
@@ -408,6 +408,9 @@ public class Sketch extends PApplet {
       gameState = 1;
     }
   }
+  /**
+   * The keyReleased method built into processing. Checks if the key is released. No return method. 
+   */
   public void keyReleased() {
     if (key == 119){
       upPressed = false;
@@ -444,6 +447,9 @@ public class Sketch extends PApplet {
       }
     }
   }
+  /**
+   * The movement engine for both the player and the Lamb. No return method.
+   */
   public void playerMovementEngine(){
     if (upPressed) {
       y_speed -= 3;
@@ -494,10 +500,7 @@ public class Sketch extends PApplet {
 
     x = (int) (x + (int) x_speed);
     y = (int) (y + (int) y_speed);
-/*
-    lambSpeedX = (int) (-1*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-    lambSpeedY = (int) (-1*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-*/
+
     lambX = (int) (lambX + lambSpeedX);
     lambY = (int) (lambY + lambSpeedY);
     
@@ -512,7 +515,6 @@ public class Sketch extends PApplet {
       }
     }
 
-    //rect(lambX - 75, lambY - 75, 150, 150);  
     if (intangibility == true){
       tint(255,0,0);
       image(img, x - 30, y - 25);
@@ -521,7 +523,6 @@ public class Sketch extends PApplet {
       image(img, x - 30, y - 25);
     }
 
-    //image(lamb, lambX - 75, lambY - 75, 150, 150);
     if(gameState == 1){
       noTint();
       image(the_lamb_frames[(frameCount/5)%intlamb_frames], lambX - 75, lambY - 75, 72 * 2, 69 * 2);
@@ -540,6 +541,10 @@ public class Sketch extends PApplet {
     }
 
   }
+
+  /**
+   * The intangibility engine for the player. Also checks for hit detection against the player. No return method.
+   */
   public void intangibilityEngine(){
     if (intangibility == false){
       if ((x < (lambX + 50)) && (x > lambX - 50) && (y > lambY - 50) && (y < (lambY + 50))){
@@ -573,11 +578,13 @@ public class Sketch extends PApplet {
       intangibility = false;
     }
   }
+
+  /**
+   * The attack patterns that the boss does. Has phases. No Return method.
+   */
   public void battleLoop(){
-    
     if (bossHealth < maxHealth && bossHealth >= 0){
       internalFrameCount += 1;
-      //println(internalFrameCount);
       if(eternalMode == true && (bossPhase == 1 || bossPhase == 2)){
         for(int eternalIntensity = 0; eternalIntensity <= 1000; eternalIntensity += attackIntensity){
           if(internalFrameCount == eternalIntensity){
@@ -603,62 +610,38 @@ public class Sketch extends PApplet {
         }
                   
         if(internalFrameCount == 350){
-        //if(internalFrameCount == 155 + internalAttackDelay){
           sniperAttack(playerAngle(lambX, lambY, x, y), 20);
         }
         if(internalFrameCount == 400){
-        //if(internalFrameCount == 205 + internalAttackDelay){
           sniperAttack(playerAngle(lambX, lambY, x, y), 20);
         }
         if(internalFrameCount == 450){
-        //if(internalFrameCount == 255 + internalAttackDelay){
           sniperAttack(playerAngle(lambX, lambY, x, y), 20);
         }
 
         if(internalFrameCount >= 550){
           if(internalFrameCount == 551){
-        //if(internalFrameCount >= 400 + (internalAttackDelay)){
-          //if(internalFrameCount == 400 + (internalAttackDelay)){
             lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
             lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
           }
             
-          //if (lambX <= 50 || lambX >= width - 50 && lambHitWall < 3){
           if (lambX <= 50 || lambX >= width - 50){
 
             lambHitWall += 1;
             sniperAttack(playerAngle(lambX, lambY, x, y), 19);
-            //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
-            //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
             sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
             
-            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
-
-            //lambX = (width) - lambX;
-            //lambY = (height) - lambY;
-            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
             lambSpeedX = lambSpeedX * -1;
-          } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
-          else if(lambY <= 50 || lambY >= height -50){
+          } else if(lambY <= 50 || lambY >= height -50){
             lambHitWall += 1;
             sniperAttack(playerAngle(lambX, lambY, x, y), 19);
-            //sniperAttack(10 + (playerAngle(lambX, lambY, x, y)), 15);
-            //sniperAttack(10 - -1*(playerAngle(lambX, lambY, x, y)));
-            //sniperAttack(-1*(playerAngle(lambX, lambY, x, y)), 19);
-            //sniperAttack(20 - (playerAngle(lambX, lambY, x, y)));
-
-            //lambX = (width) - lambX;
-            //lambY = (height) - lambY;
-            //lambSpeedX = (int) (-16*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
-            //lambSpeedY = (int) (-16*(Math.sin(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
+            
             lambSpeedY = lambSpeedY * -1;
           }
         } else{
           if (lambX <= 50 || lambX >= width - 50){
             lambSpeedX = lambSpeedX * -1;
-          } //else if(lambY <= 50 || lambY >= height -50 && lambHitWall < 3){
-          else if(lambY <= 50 || lambY >= height -50){
+          } else if(lambY <= 50 || lambY >= height -50){
             lambSpeedY = lambSpeedY * -1;
           }
         }
@@ -676,33 +659,18 @@ public class Sketch extends PApplet {
         }
         if (lambHitWall >= 3 && internalFrameCount >= 0){
           internalFrameCount = -60;
-
-          //lambX = width/2;
-          //lambY = 50;
-          //lambSpeedX = 0;
-          //lambSpeedY = 20;
         }
       }
       else if(bossHealth < maxHealth/2 && bossPhase == 1){
         lambSpeedX = 0;
         lambSpeedY = 0;
 
-        //lambX = 800;
-        //lambY = 500;
-
         internalFrameCount = 0;
 
         spawnFlies(4);
         bossPhase = 2;
-
       }
       if (bossPhase == 2){
-        if(internalFrameCount == 50){
-        }
-        
-        /*if(internalFrameCount >= 100 && internalFrameCount <= 125 && internalFrameCount % 5 == 0){
-          gridAttack(0, 0);
-        }*/
         if(internalFrameCount >= 150 && internalFrameCount < 190 && internalFrameCount % 5 == 0){
           
           lambSpeedX = (int) (-2*(Math.cos(Math.toRadians(playerAngle(lambX, lambY, x, y)))));
@@ -757,7 +725,6 @@ public class Sketch extends PApplet {
           catch(IndexOutOfBoundsException error){
 
           }
-          //enemy_i[0] = 0;
         }
 
         if(internalFrameCount >= 572 && internalFrameCount < 622 && internalFrameCount % 10 == 0){
@@ -777,7 +744,6 @@ public class Sketch extends PApplet {
           catch(IndexOutOfBoundsException error){
 
           }
-          //enemy_i[0] = 0;
         }
         if(internalFrameCount >= 624 && internalFrameCount < 674 && internalFrameCount % 10 == 0){
           enemyTear(lambX, lambY, 15 + internalFrameCount % 2, 4);
@@ -798,12 +764,7 @@ public class Sketch extends PApplet {
           }
           enemy_i[0] = 0;
         }
-        /*
-        if(internalFrameCount == 650){
-          for(int dfds = 0; dfds <= 360; dfds += 45){
-            gridAttack(500, 500, dfds, 20); 
-          }
-        }*/
+
 
         if(internalFrameCount >= 725 && internalFrameCount <= 875){
           if (lambX <= 50 || lambX >= width - 50){
@@ -862,8 +823,6 @@ public class Sketch extends PApplet {
         lambSpeedX = 0;
         lambSpeedY = 0;
 
-        //lambX = 800;
-        //lambY = 500;
 
         enemy_i[0] = 0;
         internalFrameCount = 0;
@@ -884,22 +843,34 @@ public class Sketch extends PApplet {
         }
       }
     }
-  
   }
 
+  /**
+   * Finds the angle between 2 points
+   * @param xShooter x Position of the shooter
+   * @param yShooter y Position of the shooter
+   * @param xTarger x Position of the target
+   * @param yTarger y Position of the target
+   * @return The angle in degrees.
+   */
   public double playerAngle(int xShooter, int yShooter, int xTarget, int yTarget){
     double degree = 0;
     try{
       degree = Math.atan2((yShooter - yTarget),(xShooter - xTarget));
       degree = Math.toDegrees(degree);
-      //println(degree);
-      //degree = Math.atan((yTarget)/(xTarget));
     }
     catch(ArithmeticException error){
     }
     return degree;
   }
 
+  /**
+   * Makes the shooter fire a tear in a certain direction with magnitude.
+   * @param xPos The x position of the shooter
+   * @param yPos The y position of the shooter
+   * @param angle The angle to fire towards
+   * @param magnitude The magnitude of the shot i.e. how strong it is. Method usually wants negative values.
+   */
   public void enemyTear(int xPos, int yPos, int angle, int magnitude){
     enemy_i[0] += 1;
     enemyTearExist[enemy_i[0]] = true;
@@ -907,13 +878,11 @@ public class Sketch extends PApplet {
     yEnemyArray[enemy_i[0]][0] = yPos;
     xEnemySpeedArray[enemy_i[0]][0] = (magnitude*(Math.cos(Math.toRadians(angle))));
     yEnemySpeedArray[enemy_i[0]][0]= (magnitude*(Math.sin(Math.toRadians(angle))));
-    
-    //xEnemySpeedArray[enemy_i] = 0;
-    //yEnemySpeedArray[enemy_i] = 0;
-    //println(enemy_i + " " + xEnemyArray[enemy_i - 1] + " " + yEnemyArray[enemy_i - 1] + " " + xEnemySpeedArray[enemy_i - 1] + " " + yEnemySpeedArray[enemy_i - 1]);
   }
 
-
+  /**
+   * Makes three shots in 120, 240, and 360 degrees.
+   */
   public void triAttack(){
     angle_i[1] += 10;
 
@@ -921,6 +890,9 @@ public class Sketch extends PApplet {
       enemyTear(lambX, lambY, angle_i[1] + triAngle, 4);
     }
   }
+  /**
+   * Makes a trail of tears curving in small increments, as well as making a ring of tears. Not much of a heart attack. 
+   */
   public void heartAttack(){
     angle_i[2] += 1;
 
@@ -930,37 +902,37 @@ public class Sketch extends PApplet {
       octaAttack(30 + angle_i[2], 2);
     }
 
-
     enemyTear(lambX, lambY, angle_i[2], 5);
     enemyTear(lambX, lambY, angle_i[2] + 90, 5);
     enemyTear(lambX, lambY, angle_i[2] + 180, 5);
     enemyTear(lambX, lambY, angle_i[2] + 270, 5);
   }
+  /**
+   * Asks for a player angle and magnitude, then fires a bunch of tears with the same angle and descending magnitude.
+   * @param playerAngle Asks for the angle.
+   * @param magnitude Asks for the magnitude.
+   */
   public void sniperAttack(double playerAngle, int magnitude){
-    indicatorAttack(playerAngle);
 
     angle_i[3] = (int)playerAngle;
     for(int i = -5; i > -1*magnitude; i -= 1){
       enemyTear(lambX, lambY, angle_i[3], i);
     }
   }
-  public void gridAttack(int originX, int originY, int playerAngle, int magnitude){
-    angle_i[4] = (int)playerAngle;
-
-    for(int i = -5; i > -1*magnitude; i -= 1){
-      enemyTear(originX, originY, angle_i[4], i);
-    }
-  }
-  public void indicatorAttack(double playerAngle){
-    stroke(0);
-    fill(255, 0, 0);
-    line(lambX, lambY, x, y);
-  }
+  /**
+   * Creates 8 tears in a ring.
+   * @param angle Asks for the starting angle
+   * @param magnitude Asks for the magnitude.
+   */
   public void octaAttack(double angle, int magnitude){
     for(int triAngle = 0; triAngle < 360; triAngle += 45){
       enemyTear(lambX, lambY, (int) angle + triAngle, magnitude);
     }
   }
+  /**
+   * Creates flies.
+   * @param fliesSpawned Asks for the number of flies you want to spawn.
+   */
   public void spawnFlies(int fliesSpawned){
     for(int i = 0; i < fliesSpawned; i ++){
       objectLimiter[2] = fliesSpawned;
@@ -970,7 +942,6 @@ public class Sketch extends PApplet {
 
       yEnemyArray[i][2] = lambY;
 
-      //enemyHealth[i] = 10;
       enemyHealth[i] = 10;
       
     }
